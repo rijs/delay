@@ -42,12 +42,12 @@ module.exports = require('client')
 module.exports = require('err')
 },{"err":9}],5:[function(require,module,exports){
 module.exports = require('log')
-},{"log":12}],6:[function(require,module,exports){
+},{"log":13}],6:[function(require,module,exports){
 var is = require('is')
 
 module.exports = function attr(d, name, value) {
   d = d.node ? d.node() : d
-  if (is.str(d)) return function(el){ return attr(el, d) }
+  if (is.str(d)) return function(el){ return attr(this.nodeName || this.node ? this : el, d) }
 
   return arguments.length > 2 && value === false ? d.removeAttribute(name)
        : arguments.length > 2                    ? d.setAttribute(name, value)
@@ -56,21 +56,32 @@ module.exports = function attr(d, name, value) {
 }
 
 },{"is":7}],7:[function(require,module,exports){
-module.exports = { 
-  fn     : isFunction
-, str    : isString
-, num    : isNumber
-, obj    : isObject
-, truthy : isTruthy
-, falsy  : isFalsy
-, arr    : isArray
-, null   : isNull
-, def    : isDef
-, in     : isIn
+module.exports = is
+is.fn     = isFunction
+is.str    = isString
+is.num    = isNumber
+is.obj    = isObject
+is.lit    = isLiteral
+is.bol    = isBoolean
+is.truthy = isTruthy
+is.falsy  = isFalsy
+is.arr    = isArray
+is.null   = isNull
+is.def    = isDef
+is.in     = isIn
+
+function is(v){
+  return function(d){
+    return d == v
+  }
 }
 
 function isFunction(d) {
   return typeof d == 'function'
+}
+
+function isBoolean(d) {
+  return typeof d == 'boolean'
 }
 
 function isString(d) {
@@ -83,6 +94,11 @@ function isNumber(d) {
 
 function isObject(d) {
   return typeof d == 'object'
+}
+
+function isLiteral(d) {
+  return typeof d == 'object' 
+      && !(d instanceof Array)
 }
 
 function isTruthy(d) {
@@ -107,49 +123,32 @@ function isDef(d) {
 
 function isIn(set) {
   return function(d){
-    return ~set.indexOf(d)
+    return  set.indexOf 
+         ? ~set.indexOf(d)
+         :  d in set
   }
 }
 },{}],8:[function(require,module,exports){
 module.exports = typeof window != 'undefined'
 },{}],9:[function(require,module,exports){
 var owner = require('owner')
+  , to = require('to')
 
 module.exports = function err(prefix){
   return function(d){
-    if (!owner.console) return d;
-    var args = [].slice.call(arguments, 0)
-    args.unshift(''.red ? prefix.red : prefix)
+    if (!owner.console || !console.error.apply) return d;
+    var args = to.arr(arguments)
+    args.unshift(prefix.red ? prefix.red : prefix)
     return console.error.apply(console, args), d
   }
 }
-},{"owner":10}],10:[function(require,module,exports){
+},{"owner":10,"to":12}],10:[function(require,module,exports){
 (function (global){
-module.exports = require('client') ? window : global
+module.exports = require('client') ? /* istanbul ignore next */ window : global
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"client":11}],11:[function(require,module,exports){
 arguments[4][8][0].apply(exports,arguments)
 },{"dup":8}],12:[function(require,module,exports){
-var is = require('is')
-  , to = require('to')
-  , owner = require('owner')
-
-module.exports = function log(prefix){
-  return function(d){
-    if (!owner.console) return d;
-    is.arr(arguments[2]) && (arguments[2] = arguments[2].length)
-    var args = to.arr(arguments)
-    args.unshift(''.grey ? prefix.grey : prefix)
-    return console.log.apply(console, args), d
-  }
-}
-},{"is":13,"owner":14,"to":16}],13:[function(require,module,exports){
-arguments[4][7][0].apply(exports,arguments)
-},{"dup":7}],14:[function(require,module,exports){
-arguments[4][10][0].apply(exports,arguments)
-},{"client":15,"dup":10}],15:[function(require,module,exports){
-arguments[4][8][0].apply(exports,arguments)
-},{"dup":8}],16:[function(require,module,exports){
 module.exports = { 
   arr : toArray
 }
@@ -157,4 +156,26 @@ module.exports = {
 function toArray(d){
   return Array.prototype.slice.call(d, 0)
 }
-},{}]},{},[1]);
+},{}],13:[function(require,module,exports){
+var is = require('is')
+  , to = require('to')
+  , owner = require('owner')
+
+module.exports = function log(prefix){
+  return function(d){
+    if (!owner.console || !console.log.apply) return d;
+    is.arr(arguments[2]) && (arguments[2] = arguments[2].length)
+    var args = to.arr(arguments)
+    args.unshift(prefix.grey ? prefix.grey : prefix)
+    return console.log.apply(console, args), d
+  }
+}
+},{"is":14,"owner":15,"to":17}],14:[function(require,module,exports){
+arguments[4][7][0].apply(exports,arguments)
+},{"dup":7}],15:[function(require,module,exports){
+arguments[4][10][0].apply(exports,arguments)
+},{"client":16,"dup":10}],16:[function(require,module,exports){
+arguments[4][8][0].apply(exports,arguments)
+},{"dup":8}],17:[function(require,module,exports){
+arguments[4][12][0].apply(exports,arguments)
+},{"dup":12}]},{},[1]);
