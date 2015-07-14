@@ -1,15 +1,20 @@
 var expect     = require('chai').expect
-  , components = require('components')
-  , core       = require('core')
-  , fn         = require('fn')
+  , client     = require('client')
+  , shim       = !client && polyfill()
+  , components = require('rijs.components')
+  , core       = require('rijs.core')
+  , fn         = require('rijs.fn')
   , delay      = require('../')
-  , container  = document.createElement('div')
+  , container
   , el1, el2
 
 describe('Delay Render', function() {
-  
+
   before(function(){
-    document.body.appendChild(container)
+    /* istanbul ignore next */
+    container = !client
+      ? document.body.firstElementChild
+      : document.body.appendChild(document.createElement('div'))
   })
 
   beforeEach(function(done){
@@ -23,7 +28,7 @@ describe('Delay Render', function() {
 
   after(function(){
     document.body.removeChild(container)
-  })
+  })  
   
   it('should postpone rendering by specified time', function(done) {
     var ripple = delay(components(fn(core())))
@@ -42,3 +47,12 @@ describe('Delay Render', function() {
   })
 
 })
+
+function polyfill(){
+  window = require("jsdom").jsdom('<div>').defaultView
+  global.document = window.document
+  global.Element = window.Element
+  global.requestAnimationFrame = function(fn){
+    return setTimeout(fn, 16)
+  }
+}

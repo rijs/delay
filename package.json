@@ -1,5 +1,5 @@
 {
-  "name": "delay",
+  "name": "rijs.delay",
   "version": "0.0.0",
   "main": "dist",
   "author": "Pedram Emrouznejad (https://github.com/pemrouz)",
@@ -9,19 +9,20 @@
     "bundle": "browserify dist/index.js -o dist/client.js",
     "minify": "uglifyjs dist/client.js -m -c drop_console,dead_code -d debug=false -o dist/client.min.js",
     "build": "npm run babel && npm run ignore && npm run bundle && npm run minify",
-    "test": "browserify test/client.js -o dist/test.js && start test/index.html",
+    "test:client": "browserify test/client.js -o dist/test.js && start test/index.html",
+    "test": "istanbul test ./node_modules/mocha/bin/_mocha --report html -- -R spec",
     "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && rm -rf ./coverage",
-    "watch": "watch \"npm run build && npm test\" src/ test/"
+    "watch": "watch \"npm run build && npm test:client\" src/ test/"
   },
   "license": "pemrouz.mit-license.org",
   "devDependencies": {
     "babel": "^4.6.3",
     "browserify": "^9.0.3",
     "chai": "^2.3.0",
-    "components": "git://github.com/rijs/components",
-    "core": "git://github.com/rijs/core",
+    "rijs.components": "git://github.com/rijs/components",
+    "rijs.core": "git://github.com/rijs/core",
     "coveralls": "^2.11.2",
-    "fn": "git://github.com/rijs/fn",
+    "rijs.fn": "git://github.com/rijs/fn",
     "istanbul": "^0.3.13",
     "jsdom": "^5.4.2",
     "mocha": "^2.2.4",
