@@ -4,7 +4,7 @@ var expect     = require('chai').expect
   , components = require('rijs.components')
   , core       = require('rijs.core')
   , fn         = require('rijs.fn')
-  , delay      = require('../')
+  , delay      = require('./')
   , container
   , el1, el2
 
