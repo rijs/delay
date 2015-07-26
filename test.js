@@ -1,5 +1,5 @@
 var expect     = require('chai').expect
-  , client     = require('client')
+  , client     = require('utilise/client')
   // , shim       = !client && polyfill()
   , components = require('rijs.components')
   , core       = require('rijs.core')
