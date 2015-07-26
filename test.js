@@ -1,6 +1,6 @@
 var expect     = require('chai').expect
   , client     = require('client')
-  , shim       = !client && polyfill()
+  // , shim       = !client && polyfill()
   , components = require('rijs.components')
   , core       = require('rijs.core')
   , fn         = require('rijs.fn')
@@ -48,11 +48,11 @@ describe('Delay Render', function() {
 
 })
 
-function polyfill(){
-  window = require("jsdom").jsdom('<div>').defaultView
-  global.document = window.document
-  global.Element = window.Element
-  global.requestAnimationFrame = function(fn){
-    return setTimeout(fn, 16)
-  }
-}
+// function polyfill(){
+//   window = require("jsdom").jsdom('<div>').defaultView
+//   global.document = window.document
+//   global.Element = window.Element
+//   global.requestAnimationFrame = function(fn){
+//     return setTimeout(fn, 16)
+//   }
+// }
