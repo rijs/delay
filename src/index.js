@@ -8,12 +8,12 @@ export default function delay(ripple){
   var render = ripple.render
 
   ripple.render = function(el){
-    var delay = attr(el, 'delay')
+    var delay = attr('delay')(el)
     return delay != null
          ? ( el.setAttribute('inert', '')
            , el.removeAttribute('delay')
            , setTimeout(el.removeAttribute.bind(el, 'inert'), +delay))
-         : render.apply(this, arguments)
+         : render(el)
   }
 
   return ripple

@@ -46,6 +46,17 @@ describe('Delay Render', function() {
     setTimeout(done, 100)
   })
 
+  it('should work in nested custom elements', function(done) {
+    container.innerHTML = '<x-el></x-el>'
+    var ripple = delay(components(fn(core())))
+    ripple('x-el', function(){ this.innerHTML = '<ye-delay delay="200"></ye-delay>' })
+    ripple('ye-delay', function(){ this.innerHTML = 'done' })
+    expect(container.innerHTML).to.eql('<x-el></x-el>')
+    setTimeout(function(){ expect(container.innerHTML).to.eql('<x-el><ye-delay inert=""></ye-delay></x-el>') }, 100)
+    setTimeout(function(){ expect(container.innerHTML).to.eql('<x-el><ye-delay>done</ye-delay></x-el>') }, 300)
+    setTimeout(done, 400)
+  })
+
 })
 
 // function polyfill(){
