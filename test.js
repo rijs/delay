@@ -1,10 +1,10 @@
 var expect     = require('chai').expect
   , client     = require('utilise/client')
   // , shim       = !client && polyfill()
-  , components = require('rijs.components')
-  , core       = require('rijs.core')
-  , fn         = require('rijs.fn')
-  , delay      = require('./')
+  , components = require('rijs.components').default
+  , core       = require('rijs.core').default
+  , fn         = require('rijs.fn').default
+  , delay      = require('./').default
   , container
   , el1, el2
 

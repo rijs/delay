@@ -21,7 +21,5 @@ export default function delay(ripple){
 
 import client from 'utilise/client'
 import attr from 'utilise/attr'
-import log from 'utilise/log'
-import err from 'utilise/err'
-log = log('[ri/delay]')
-err = err('[ri/delay]')
+var log = require('utilise/log')('[ri/delay]')
+  , err = require('utilise/err')('[ri/delay]')
