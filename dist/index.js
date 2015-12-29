@@ -21,16 +21,18 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function delay(ripple) {
   if (!_client2.default) return ripple;
   log('creating');
-
-  var render = ripple.render;
-
-  ripple.render = function (el) {
-    var delay = (0, _attr2.default)('delay')(el);
-    return delay != null ? (el.setAttribute('inert', ''), el.removeAttribute('delay'), setTimeout(el.removeAttribute.bind(el, 'inert'), +delay)) : render(el);
-  };
-
+  ripple.render = render(ripple.render);
   return ripple;
 }
+
+var render = function render(next) {
+  return function (el) {
+    var delay = (0, _attr2.default)('delay')(el);
+    delay != null ? ((0, _attr2.default)('inert', '')(el), (0, _attr2.default)('delay', false)(el), time(+delay, function (d) {
+      return (0, _attr2.default)('inert', false)(el), el.draw();
+    })) : next(el);
+  };
+};
 
 var log = require('utilise/log')('[ri/delay]'),
     err = require('utilise/err')('[ri/delay]');

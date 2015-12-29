@@ -4,22 +4,22 @@
 export default function delay(ripple){
   if (!client) return ripple;
   log('creating')
-  
-  var render = ripple.render
-
-  ripple.render = function(el){
-    var delay = attr('delay')(el)
-    return delay != null
-         ? ( el.setAttribute('inert', '')
-           , el.removeAttribute('delay')
-           , setTimeout(el.removeAttribute.bind(el, 'inert'), +delay))
-         : render(el)
-  }
-
+  ripple.render = render(ripple.render)
   return ripple
 }
 
+const render = next => el => { 
+  const delay = attr('delay')(el)
+  delay != null
+    ? ( attr('inert', '')(el)
+      , attr('delay', false)(el)
+      , time(+delay, d => (attr('inert', false)(el), el.draw()))
+      )
+    : next(el)
+}
+
+const log = require('utilise/log')('[ri/delay]')
+    , err = require('utilise/err')('[ri/delay]')
+
 import client from 'utilise/client'
 import attr from 'utilise/attr'
-var log = require('utilise/log')('[ri/delay]')
-  , err = require('utilise/err')('[ri/delay]')

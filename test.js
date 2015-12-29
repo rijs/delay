@@ -1,6 +1,6 @@
 var expect     = require('chai').expect
   , client     = require('utilise/client')
-  // , shim       = !client && polyfill()
+  , time       = require('utilise/time')
   , components = require('rijs.components').default
   , core       = require('rijs.core').default
   , fn         = require('rijs.fn').default
@@ -23,7 +23,7 @@ describe('Delay Render', function() {
     container.innerHTML += '<ye-delay delay="300">'
     el1 = container.children[0]
     el2 = container.children[1]
-    setTimeout(done, 30)
+    time(30, done)
   })
 
   after(function(){
@@ -33,17 +33,19 @@ describe('Delay Render', function() {
   it('should postpone rendering by specified time', function(done) {
     var ripple = delay(components(fn(core())))
     ripple('ye-delay', function(){ this.innerHTML = 'done' })
+    
     expect(el2.innerHTML).to.eql('')
-    setTimeout(function(){ expect(el2.innerHTML).to.eql('') }, 200)
-    setTimeout(function(){ expect(el2.innerHTML).to.eql('done') }, 400)
-    setTimeout(done, 500)
+    time(200, function(){ expect(el2.innerHTML).to.eql('') })
+    time(400, function(){ expect(el2.innerHTML).to.eql('done') })
+    time(500, done)
   })
 
   it('should not affect delay-less components', function(done) {
     var ripple = delay(components(fn(core())))
     ripple('no-delay', function(){ this.innerHTML = 'done' })
-    setTimeout(function(){ expect(el1.innerHTML).to.eql('done') }, 40)
-    setTimeout(done, 100)
+    
+    time(40 , function(){ expect(el1.innerHTML).to.eql('done') })
+    time(100, done)
   })
 
   it('should work in nested custom elements', function(done) {
@@ -51,19 +53,11 @@ describe('Delay Render', function() {
     var ripple = delay(components(fn(core())))
     ripple('x-el', function(){ this.innerHTML = '<ye-delay delay="200"></ye-delay>' })
     ripple('ye-delay', function(){ this.innerHTML = 'done' })
+
     expect(container.innerHTML).to.eql('<x-el></x-el>')
-    setTimeout(function(){ expect(container.innerHTML).to.eql('<x-el><ye-delay inert=""></ye-delay></x-el>') }, 100)
-    setTimeout(function(){ expect(container.innerHTML).to.eql('<x-el><ye-delay>done</ye-delay></x-el>') }, 300)
-    setTimeout(done, 400)
+    time(100, function(){ expect(container.innerHTML).to.eql('<x-el><ye-delay inert=""></ye-delay></x-el>') })
+    time(300, function(){ expect(container.innerHTML).to.eql('<x-el><ye-delay>done</ye-delay></x-el>') })
+    time(400, done)
   })
 
 })
-
-// function polyfill(){
-//   window = require("jsdom").jsdom('<div>').defaultView
-//   global.document = window.document
-//   global.Element = window.Element
-//   global.requestAnimationFrame = function(fn){
-//     return setTimeout(fn, 16)
-//   }
-// }
