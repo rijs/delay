@@ -2,7 +2,7 @@
 [![Coverage Status](https://coveralls.io/repos/rijs/delay/badge.svg?branch=master&service=github)](https://coveralls.io/github/rijs/delay?branch=master)
 [![Build Status](https://travis-ci.org/rijs/delay.svg)](https://travis-ci.org/rijs/delay)
 
-Delays rendering a view by a specified time (ms)
+Extends the [rendering pipeline]() to delay rendering a view by a specified time (ms)
 
 ```js
 <component-name delay="500">
