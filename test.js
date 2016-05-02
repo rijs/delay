@@ -1,6 +1,7 @@
 var expect     = require('chai').expect
   , client     = require('utilise/client')
   , time       = require('utilise/time')
+  , once       = require('utilise/once')
   , components = require('rijs.components').default
   , core       = require('rijs.core').default
   , fn         = require('rijs.fn').default
@@ -51,10 +52,11 @@ describe('Delay Render', function() {
   it('should work in nested custom elements', function(done) {
     container.innerHTML = '<x-el></x-el>'
     var ripple = delay(components(fn(core())))
-    ripple('x-el', function(){ this.innerHTML = '<ye-delay delay="200"></ye-delay>' })
-    ripple('ye-delay', function(){ this.innerHTML = 'done' })
 
-    expect(container.innerHTML).to.eql('<x-el></x-el>')
+    time( 10, function(){
+      ripple('x-el', function(){ once(this)('ye-delay[delay="200"]', 1) })
+      ripple('ye-delay', function(){ this.innerHTML = 'done' })
+    })
     time(100, function(){ expect(container.innerHTML).to.eql('<x-el><ye-delay inert=""></ye-delay></x-el>') })
     time(300, function(){ expect(container.innerHTML).to.eql('<x-el><ye-delay>done</ye-delay></x-el>') })
     time(400, done)
