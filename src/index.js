@@ -10,7 +10,7 @@ export default function delay(ripple){
 
 const render = next => el => { 
   const delay = attr('delay')(el)
-  delay != null
+  return delay != null
     ? ( attr('inert', '')(el)
       , attr('delay', false)(el)
       , time(+delay, d => (attr('inert', false)(el), el.draw()))

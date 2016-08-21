@@ -28,7 +28,7 @@ function delay(ripple) {
 var render = function render(next) {
   return function (el) {
     var delay = (0, _attr2.default)('delay')(el);
-    delay != null ? ((0, _attr2.default)('inert', '')(el), (0, _attr2.default)('delay', false)(el), time(+delay, function (d) {
+    return delay != null ? ((0, _attr2.default)('inert', '')(el), (0, _attr2.default)('delay', false)(el), time(+delay, function (d) {
       return (0, _attr2.default)('inert', false)(el), el.draw();
     })) : next(el);
   };
